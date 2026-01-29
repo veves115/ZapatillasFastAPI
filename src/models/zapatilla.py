@@ -3,7 +3,7 @@ from sqlmodel import SQLModel, Field
 from pydantic import BaseModel
 
 class Zapatilla(SQLModel, table=True):
-    id: int = Field(default=None, primary_key=True)
+    id: int | None = Field(default=None, primary_key=True)
     marca: str
     modelo: str
     talla: float
@@ -42,7 +42,7 @@ class ZapatillaResponse(BaseModel):
 
 
 # mapping functions 
-def map_serie_to_response(zapatilla: Zapatilla) -> ZapatillaResponse:
+def map_zapatilla_to_response(zapatilla: Zapatilla) -> ZapatillaResponse:
     return ZapatillaResponse(
         id=zapatilla.id,
         marca=zapatilla.marca,
@@ -53,7 +53,7 @@ def map_serie_to_response(zapatilla: Zapatilla) -> ZapatillaResponse:
         color=zapatilla.color
     )
 
-def map_create_to_serie(zapatilla_create: ZapatillaCreate) -> Zapatilla:
+def map_create_to_zapatilla(zapatilla_create: ZapatillaCreate) -> Zapatilla:
     return Zapatilla(
         marca=zapatilla_create.marca,
         modelo=zapatilla_create.modelo,
@@ -63,9 +63,9 @@ def map_create_to_serie(zapatilla_create: ZapatillaCreate) -> Zapatilla:
         color=zapatilla_create.color,
         fecha_lanzamiento=zapatilla_create.fecha_lanzamiento
     )
-def map_update_to_serie(zapatilla: Zapatilla, zapatilla_update: ZapatillaUpdate) -> Zapatilla:
+
+def map_update_to_zapatilla(zapatilla: Zapatilla, zapatilla_update: ZapatillaUpdate) -> Zapatilla:
     if zapatilla_update.precio is not None:
         zapatilla.precio = zapatilla_update.precio
 
-        return
-
+        return zapatilla
