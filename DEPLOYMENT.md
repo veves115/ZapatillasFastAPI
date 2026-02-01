@@ -4,6 +4,14 @@
 
 **URL**: [https://zapatillas-api.onrender.com]
 
+## Capturas de prueba del despliegue
+
+### Despliegue en Render
+![Captura del despliegue en Render](./src/docs/captura-render.png)
+
+### Aplicación, Docker y Web funcionando
+![Docker, App y Web](./src/docs/docker-app-zapatillas.png)
+
 ## Cambios realizados para el despliegue
 
 ### 1. Dockerfile
