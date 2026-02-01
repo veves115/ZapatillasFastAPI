@@ -1,0 +1,32 @@
+databases:
+  - name: zapatillas-db
+    plan: free
+    databaseName: zapatillas_db
+    user: zapatillas_user
+
+services:
+  - type: web
+    name: zapatillas-api
+    runtime: docker
+    plan: free
+    envVars:
+      - key: DB_USER
+        fromDatabase:
+          name: zapatillas-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: zapatillas-db
+          property: password
+      - key: DB_HOST
+        fromDatabase:
+          name: zapatillas-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: zapatillas-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: zapatillas-db
+          property: database

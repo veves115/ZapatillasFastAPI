@@ -1,0 +1,17 @@
+name: fastapi-postgres
+
+services:
+  db-postgres:
+    image: postgres:16
+    container_name: db-postgres
+    environment:
+      POSTGRES_DB: zapatillas-db
+      POSTGRES_USER: pablo
+      POSTGRES_PASSWORD: 1234
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

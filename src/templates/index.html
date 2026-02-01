@@ -1,0 +1,27 @@
+{% extends "fragments/base.html" %}
+
+{% block title %}Inicio - Zapatillas API{% endblock %}
+
+{% block content %}
+<section class="zapatillas-list">
+    <h2>Catálogo de Zapatillas</h2>
+
+    {% if zapatillas %}
+    <div class="grid">
+        {% for zapatilla in zapatillas %}
+        <div class="card">
+            <h3>{{ zapatilla.marca }} {{ zapatilla.modelo }}</h3>
+            <ul>
+                <li><strong>Talla:</strong> {{ zapatilla.talla }}</li>
+                <li><strong>Precio:</strong> ${{ zapatilla.precio }}</li>
+                <li><strong>Tipo:</strong> {{ zapatilla.tipo }}</li>
+                <li><strong>Color:</strong> {{ zapatilla.color }}</li>
+            </ul>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p>No hay zapatillas disponibles.</p>
+    {% endif %}
+</section>
+{% endblock %}

@@ -24,11 +24,17 @@ SessionDep = Annotated[Session, Depends(get_session)]
 
 app = FastAPI(lifespan =lifespan)
 
-# Configurar directorios para templates y archivos estáticos
 BASE_DIR = Path(__file__).resolve().parent
 templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
 app.mount("/static", StaticFiles(directory=str(BASE_DIR / "static")), name="static")
 app.include_router(api_router)
+
+@app.get("/")
+def home(request: Request, session: SessionDep):
+    repo = ZapatillasRepository(session)
+    zapatillas = repo.get_all()
+    return templates.TemplateResponse("index.html", {"request": request, "zapatillas": zapatillas})
+
 @app.get("/zapatillas", response_model=list[Zapatilla])
 def lista_zapatillas(session: SessionDep):
     repo = ZapatillasRepository(session)
