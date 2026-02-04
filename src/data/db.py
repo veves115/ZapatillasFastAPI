@@ -9,10 +9,10 @@ load_dotenv()
 db_user: str = os.getenv("DB_USER", "pablo")
 db_password: str = os.getenv("DB_PASSWORD", "1234")
 db_host: str = os.getenv("DB_HOST", "zapatillas-db")
-db_port: str = os.getenv("DB_PORT", "5432")
+db_port: str = os.getenv("DB_PORT", "3306")
 db_name: str = os.getenv("DB_NAME", "zapatillas-db")
 
-DATABASE_URL = f"postgresql+psycopg2://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
+DATABASE_URL = f"mysql+pymysql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
 engine = create_engine(DATABASE_URL, echo=True, pool_pre_ping=True, pool_recycle=300)
 
 def get_session():

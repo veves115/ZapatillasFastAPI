@@ -1,7 +1,7 @@
 fastapi
 uvicorn
 sqlmodel
-psycopg2-binary
+pymysql
 jinja2
 python-multipart
 python-dotenv
