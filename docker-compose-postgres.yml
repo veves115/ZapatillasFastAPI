@@ -1,6 +1,24 @@
 name: fastapi-postgres
 
 services:
+  fastapi-zapatillas:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fastapi-zapatillas-postgres
+    restart: always
+    ports:
+      - "8000:8000"
+    depends_on:
+      db-postgres:
+        condition: service_healthy
+    environment:
+      DB_USER: pablo
+      DB_PASSWORD: 1234
+      DB_HOST: db-postgres
+      DB_PORT: 5432
+      DB_NAME: zapatillas-db
+
   db-postgres:
     image: postgres:16
     container_name: db-postgres
@@ -12,6 +30,11 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pablo -d zapatillas-db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
 volumes:
   postgres_data:
