@@ -1,16 +1,23 @@
 # Despliegue en Render - Zapatillas API
 
+## Repositorio GitHub
+
+| Rama | Base de datos | URL |
+|------|---------------|-----|
+| `main` | PostgreSQL | [https://github.com/veves115/ZapatillasFastAPI/tree/main](https://github.com/veves115/ZapatillasFastAPI/tree/main) |
+| `mysql-version` | MySQL | [https://github.com/veves115/ZapatillasFastAPI/tree/mysql-version](https://github.com/veves115/ZapatillasFastAPI/tree/mysql-version) |
+
+> **Nota:** Los directorios `__pycache__/` y `venv/` estan excluidos del repositorio mediante `.gitignore`.
+
 ## Enlace de la aplicación desplegada
 
-**URL**: [https://zapatillas-api.onrender.com]
+**URL**: [https://zapatillas-api.onrender.com](https://zapatillas-api.onrender.com)
 
 ## Capturas de prueba del despliegue
 
 ### Despliegue en Render
 ![Captura del despliegue en Render](./src/docs/captura-render.png)
 
-### Aplicación, Docker y Web funcionando
-![Docker, App y Web](./src/docs/docker-app-zapatillas.png)
 
 ## Cambios realizados para el despliegue
 
@@ -64,7 +71,7 @@ jinja2
 python-multipart
 python-dotenv
 ```
-## Proceso de despliegue manual (Projects)
+## Proceso de despliegue manual
 
 ### Paso 1: Crear la Base de Datos PostgreSQL
 
@@ -104,5 +111,97 @@ python-dotenv
    | `DB_HOST` | (Hostname de la base de datos) |
    | `DB_PORT` | `5432` |
    | `DB_NAME` | (Database name) |
+
+---
+
+## Diferencias entre ramas: PostgreSQL vs MySQL
+
+Este proyecto cuenta con dos ramas principales que utilizan diferentes bases de datos:
+
+| Aspecto | Rama `main` (PostgreSQL) | Rama `mysql-version` (MySQL) |
+|---------|--------------------------|------------------------------|
+| **Base de datos** | PostgreSQL 16 | MySQL 8 |
+| **Driver Python** | `psycopg2-binary` | `pymysql` + `cryptography` |
+| **Puerto por defecto** | 5432 | 3306 |
+| **Cadena de conexion** | `postgresql+psycopg2://` | `mysql+pymysql://` |
+| **Docker Compose** | `docker-compose-postgres.yml` | `docker-compose.yml` |
+
+### Diferencias en el codigo fuente
+
+#### 1. Archivo `src/data/db.py`
+
+**Rama main (PostgreSQL):**
+```python
+db_port: str = os.getenv("DB_PORT", "5432")
+DATABASE_URL = f"postgresql+psycopg2://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
+```
+
+**Rama mysql-version (MySQL):**
+```python
+db_port: str = os.getenv("DB_PORT", "3306")
+DATABASE_URL = f"mysql+pymysql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
+```
+
+#### 2. Archivo `requirements.txt`
+
+**Rama main (PostgreSQL):**
+```
+fastapi
+uvicorn
+sqlmodel
+psycopg2-binary
+jinja2
+python-multipart
+python-dotenv
+```
+
+**Rama mysql-version (MySQL):**
+```
+fastapi
+uvicorn
+sqlmodel
+pymysql
+cryptography
+jinja2
+python-multipart
+python-dotenv
+```
+
+> **Nota:** La rama MySQL requiere el paquete `cryptography` adicional porque MySQL 8 utiliza el metodo de autenticacion `caching_sha2_password` por defecto.
+
+### Capturas de funcionamiento
+
+#### PostgreSQL funcionando con la aplicacion
+![PostgreSQL + App](src/docs/postgre+app.png)
+
+#### MySQL funcionando con la aplicacion
+![MySQL + App](src/docs/sql+app-zapatillas.png)
+
+---
+
+## Por que elegir PostgreSQL con psycopg2-binary
+
+### Ventajas de PostgreSQL
+
+1. **Soporte nativo en plataformas cloud**: Render, Heroku, Railway y la mayoria de plataformas PaaS ofrecen PostgreSQL gratuito integrado, lo que simplifica el despliegue.
+
+2. **Rendimiento superior en consultas complejas**: PostgreSQL tiene un optimizador de consultas mas avanzado, ideal para aplicaciones que crecen en complejidad.
+
+3. **Tipos de datos avanzados**: Soporte nativo para JSON, arrays, y tipos personalizados que facilitan el modelado de datos.
+
+4. **ACID completo**: Cumplimiento estricto de las propiedades ACID (Atomicidad, Consistencia, Aislamiento, Durabilidad).
+
+### Ventajas de psycopg2-binary
+
+1. **Driver mas maduro y estable**: Es el adaptador de PostgreSQL mas utilizado en Python, con mas de 20 años de desarrollo.
+
+2. **Rendimiento optimizado**: Implementado en C, ofrece el mejor rendimiento para operaciones con PostgreSQL.
+
+3. **Compatibilidad total con SQLAlchemy/SQLModel**: Funciona perfectamente con el ORM utilizado en este proyecto.
+
+4. **Instalacion sencilla**: La version `binary` incluye las librerias de PostgreSQL precompiladas, evitando problemas de dependencias del sistema.
+
+5. **Sin dependencias adicionales**: A diferencia de MySQL con `pymysql`, no requiere paquetes adicionales como `cryptography`.
+
 
 
